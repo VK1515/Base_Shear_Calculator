@@ -116,18 +116,7 @@ st.pyplot(fig)
 plt.close(fig)
 
 
-st.plotly_chart(fig, use_container_width=True)
 
-st.caption("Hover over points to see description. Use the selector below to jump to a year.")
-st.markdown("### Quick Jump to Year")
-
-year = st.radio(
-    "Select Code Year",
-    [1962, 1966, 1970, 1975, 1984, 2002, 2016, 2025],
-    horizontal=True
-)
-
-st.info(YEAR_DESCRIPTIONS[year])
 
 
 # ==============================
