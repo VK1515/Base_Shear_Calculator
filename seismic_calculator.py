@@ -262,4 +262,4 @@ if numeric_result and fig is not None:
 # LEGAL FOOTER
 # ==============================
 st.divider()
-st.caption("© 2026 " +" "Vrushali Kamalakar"+ ". All rights reserved. Unauthorized copying, redistribution or commercial use is strictly prohibited.")
+st.caption("© 2026 " +" "Vrushali Kamalakar"+ ". "All rights reserved. Unauthorized copying, redistribution or commercial use is strictly prohibited.")
