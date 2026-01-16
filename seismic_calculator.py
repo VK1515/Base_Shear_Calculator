@@ -63,49 +63,58 @@ st.divider()
 # TIMELINE VISUALIZATION PANEL
 # ==============================
 # ==============================
-# INTERACTIVE TIMELINE PANEL
+
+
 # ==============================
-st.subheader("Evolution Timeline of IS 1893 (Interactive)")
+# CLEAR VERTICAL TIMELINE PANEL
+# ==============================
+st.subheader("Evolution Timeline of IS 1893")
 
 timeline_data = [
-    {"year": 1962, "label": "1962 – Foundation", "desc": "Introduced seismic coefficient ah. Start of seismic design in India.", "color": "#1f77b4"},
-    {"year": 1966, "label": "1966 – Flexibility", "desc": "Introduced flexibility coefficient C for building response.", "color": "#2ca02c"},
-    {"year": 1970, "label": "1970 – Soil Interaction", "desc": "Introduced soil foundation factor β.", "color": "#ff7f0e"},
-    {"year": 1975, "label": "1975 – Importance", "desc": "Added importance factor I and regional coefficient a₀.", "color": "#d62728"},
-    {"year": 1984, "label": "1984 – Performance", "desc": "Introduced performance factor K for ductility and framing.", "color": "#9467bd"},
-    {"year": 2002, "label": "2002 – Dynamic Design", "desc": "Major shift to Z, R and Sa/g based dynamic design.", "color": "#8c564b"},
-    {"year": 2016, "label": "2016 – Refinement", "desc": "Refined 2002 provisions and values.", "color": "#17becf"},
-    {"year": 2025, "label": "2025 – H & V Forces", "desc": "Separate horizontal and vertical seismic demands.", "color": "#e377c2"},
+    ("1962", "Foundation of seismic design\nIntroduced seismic coefficient ah", "#1f77b4"),
+    ("1966", "Flexibility in building response\nIntroduced coefficient C", "#2ca02c"),
+    ("1970", "Soil–structure interaction\nIntroduced soil factor β", "#ff7f0e"),
+    ("1975", "Importance & regionality\nIntroduced I and a₀", "#d62728"),
+    ("1984", "Performance & ductility\nIntroduced factor K", "#9467bd"),
+    ("2002", "Dynamic design approach\nZ, R and Sa/g based design", "#8c564b"),
+    ("2016", "Refinement of dynamic provisions", "#17becf"),
+    ("2025", "Separate horizontal & vertical forces", "#e377c2"),
 ]
 
-years = [item["year"] for item in timeline_data]
-labels = [item["label"] for item in timeline_data]
-descs = [item["desc"] for item in timeline_data]
-colors = [item["color"] for item in timeline_data]
-y_vals = [1] * len(years)
+fig, ax = plt.subplots(figsize=(8, 6))
 
-fig = go.Figure()
+y_positions = list(range(len(timeline_data), 0, -1))
 
-fig.add_trace(go.Scatter(
-    x=years,
-    y=y_vals,
-    mode='lines+markers+text',
-    text=labels,
-    textposition="top center",
-    marker=dict(size=14, color=colors, line=dict(width=2, color="black")),
-    line=dict(color="black", width=2),
-    hovertext=descs,
-    hoverinfo="text"
-))
+for (year, text, color), y in zip(timeline_data, y_positions):
+    ax.text(
+        0.1, y,
+        f"{year}",
+        fontsize=12,
+        fontweight="bold",
+        color="black",
+        ha="right",
+        va="center"
+    )
+    ax.text(
+        0.15, y,
+        text,
+        fontsize=10,
+        color="white",
+        ha="left",
+        va="center",
+        bbox=dict(boxstyle="round,pad=0.4", facecolor=color, edgecolor="black")
+    )
 
-fig.update_layout(
-    height=250,
-    yaxis=dict(visible=False),
-    xaxis=dict(title="Year", tickmode='linear'),
-    title=dict(text="Evolution of IS 1893 Seismic Provisions", x=0.5),
-    plot_bgcolor="white",
-    margin=dict(l=20, r=20, t=50, b=20)
-)
+# Vertical line
+ax.plot([0.12, 0.12], [0.5, len(timeline_data) + 0.5], color="black", linewidth=2)
+
+ax.set_xlim(0, 1)
+ax.set_ylim(0.5, len(timeline_data) + 0.5)
+ax.axis("off")
+
+st.pyplot(fig)
+plt.close(fig)
+
 
 st.plotly_chart(fig, use_container_width=True)
 
