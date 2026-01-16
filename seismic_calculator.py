@@ -14,6 +14,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from io import BytesIO
 import datetime
+import plotly.graph_objects as go
+
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
@@ -60,25 +62,64 @@ st.divider()
 # ==============================
 # TIMELINE VISUALIZATION PANEL
 # ==============================
-st.subheader("Evolution Timeline of IS 1893")
+# ==============================
+# INTERACTIVE TIMELINE PANEL
+# ==============================
+st.subheader("Evolution Timeline of IS 1893 (Interactive)")
 
-timeline_years = list(YEAR_DESCRIPTIONS.keys())
-timeline_text = list(YEAR_DESCRIPTIONS.values())
+timeline_data = [
+    {"year": 1962, "label": "1962 – Foundation", "desc": "Introduced seismic coefficient ah. Start of seismic design in India.", "color": "#1f77b4"},
+    {"year": 1966, "label": "1966 – Flexibility", "desc": "Introduced flexibility coefficient C for building response.", "color": "#2ca02c"},
+    {"year": 1970, "label": "1970 – Soil Interaction", "desc": "Introduced soil foundation factor β.", "color": "#ff7f0e"},
+    {"year": 1975, "label": "1975 – Importance", "desc": "Added importance factor I and regional coefficient a₀.", "color": "#d62728"},
+    {"year": 1984, "label": "1984 – Performance", "desc": "Introduced performance factor K for ductility and framing.", "color": "#9467bd"},
+    {"year": 2002, "label": "2002 – Dynamic Design", "desc": "Major shift to Z, R and Sa/g based dynamic design.", "color": "#8c564b"},
+    {"year": 2016, "label": "2016 – Refinement", "desc": "Refined 2002 provisions and values.", "color": "#17becf"},
+    {"year": 2025, "label": "2025 – H & V Forces", "desc": "Separate horizontal and vertical seismic demands.", "color": "#e377c2"},
+]
 
-fig_tl, ax_tl = plt.subplots(figsize=(10, 2))
-ax_tl.scatter(timeline_years, [1]*len(timeline_years))
-ax_tl.plot(timeline_years, [1]*len(timeline_years))
-ax_tl.set_yticks([])
-ax_tl.set_xlabel("Code Year")
-ax_tl.set_title("Evolution of IS 1893 Seismic Provisions")
+years = [item["year"] for item in timeline_data]
+labels = [item["label"] for item in timeline_data]
+descs = [item["desc"] for item in timeline_data]
+colors = [item["color"] for item in timeline_data]
+y_vals = [1] * len(years)
 
-for x, txt in zip(timeline_years, timeline_text):
-    ax_tl.text(x, 1.02, txt, rotation=45, ha='right', va='bottom', fontsize=8)
+fig = go.Figure()
 
-st.pyplot(fig_tl)
-plt.close(fig_tl)
+fig.add_trace(go.Scatter(
+    x=years,
+    y=y_vals,
+    mode='lines+markers+text',
+    text=labels,
+    textposition="top center",
+    marker=dict(size=14, color=colors, line=dict(width=2, color="black")),
+    line=dict(color="black", width=2),
+    hovertext=descs,
+    hoverinfo="text"
+))
 
-st.divider()
+fig.update_layout(
+    height=250,
+    yaxis=dict(visible=False),
+    xaxis=dict(title="Year", tickmode='linear'),
+    title=dict(text="Evolution of IS 1893 Seismic Provisions", x=0.5),
+    plot_bgcolor="white",
+    margin=dict(l=20, r=20, t=50, b=20)
+)
+
+st.plotly_chart(fig, use_container_width=True)
+
+st.caption("Hover over points to see description. Use the selector below to jump to a year.")
+st.markdown("### Quick Jump to Year")
+
+year = st.radio(
+    "Select Code Year",
+    [1962, 1966, 1970, 1975, 1984, 2002, 2016, 2025],
+    horizontal=True
+)
+
+st.info(YEAR_DESCRIPTIONS[year])
+
 
 # ==============================
 # SELECT YEAR
